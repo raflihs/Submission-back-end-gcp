@@ -77,12 +77,22 @@ const addBook = (request, h) => {
 };
 
 const getAllBooks = (request, h) => {
-  const { bookId } = request.params;
+  const { name, reading, finished } = request.query;
 
   let booksFilter = books;
 
-  if (bookId) {
-    booksFilter = books.filter((b) => b.id === bookId);
+  if (name) {
+    booksFilter = books.filter((b) =>
+      b.name.toLowerCase().includes(name.toLowerCase())
+    );
+  }
+
+  if (reading) {
+    booksFilter = books.filter((b) => Number(b.reading) === Number(reading));
+  }
+
+  if (finished) {
+    booksFilter = books.filter((b) => Number(b.finished) === Number(finished));
   }
 
   const response = h.response({
@@ -97,35 +107,6 @@ const getAllBooks = (request, h) => {
   });
   response.code(200);
   return response;
-};
-
-const getBookByName = (request, h) => {
-  // const { name } = request.params;
-
-  // const index = books.filter((n) => n.name === name);
-
-  // if (index) {
-  //   const response = h.response({
-  //     status: "success",
-  //     message: "none",
-  //     data: {
-  //       books: index.map((book) => ({
-  //         id: book.id,
-  //         name: book.name,
-  //         publisher: book.publisher,
-  //       })),
-  //     },
-  //   });
-  //   response.code(200);
-  //   return response;
-  // }
-
-  // const response = h.response({
-  //   status: "fail",
-  //   message: `Tidak ada buku ${name}`,
-  // });
-  // response.code(404);
-  // return response;
 };
 
 const getBooksById = (request, h) => {
@@ -245,5 +226,4 @@ module.exports = {
   getBooksById,
   putBookById,
   deleteBook,
-  getBookByName,
 };
